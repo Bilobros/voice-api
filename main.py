@@ -8,7 +8,6 @@ import os
 
 app = FastAPI()
 
-# CORS settings - iski wajah se aapka frontend asani se connect ho jayega
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -20,16 +19,22 @@ app.add_middleware(
 class TTSRequest(BaseModel):
     text: str
     voice: str
+    rate: str = "+0%"
+    pitch: str = "+0Hz"
 
 @app.post("/api/generate")
 async def generate_audio(request: TTSRequest):
     try:
-        # Generate a unique audio file name
         filename = f"{uuid.uuid4()}.mp3"
         filepath = os.path.join(os.getcwd(), filename)
         
-        # Connect to Edge TTS and generate speech
-        communicate = edge_tts.Communicate(request.text, request.voice)
+        # Now passing rate and pitch to the TTS engine
+        communicate = edge_tts.Communicate(
+            request.text, 
+            request.voice,
+            rate=request.rate,
+            pitch=request.pitch
+        )
         await communicate.save(filepath)
         
         return FileResponse(filepath, media_type="audio/mpeg", filename="audio.mp3")
