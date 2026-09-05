@@ -64,7 +64,6 @@
         .range-value { float: right; color: #38bdf8; font-weight: bold; }
         input[type="range"] { accent-color: #ec4899; cursor: pointer; padding: 5px 0; background: transparent; border: none; box-shadow: none; }
         
-        /* 3D Elevated Button */
         button { 
             background: linear-gradient(135deg, #6366f1 0%, #a855f7 50%, #ec4899 100%); 
             color: white; 
@@ -172,7 +171,7 @@
         }
 
         try {
-            const response = await fetch('[https://voice-api-7asa.onrender.com](https://voice-api-7asa.onrender.com)', {
+            const response = await fetch('https://voice-api-7asa.onrender.com/api/generate', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ text, voice, speed: parseFloat(speed), pitch: parseInt(pitch) })
@@ -193,4 +192,4 @@
 </script>
 
 </body>
-</html>\
+</html>
