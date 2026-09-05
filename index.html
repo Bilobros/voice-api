@@ -172,7 +172,7 @@
         }
 
         try {
-            const response = await fetch('YOUR_RENDER_BACKEND_URL/api/generate', {
+            const response = await fetch('[https://voice-api-7asa.onrender.com](https://voice-api-7asa.onrender.com)', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ text, voice, speed: parseFloat(speed), pitch: parseInt(pitch) })
