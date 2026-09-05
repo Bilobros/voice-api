@@ -19,8 +19,8 @@ app.add_middleware(
 class TTSRequest(BaseModel):
     text: str
     voice: str
-    rate: str = "+0%"
-    pitch: str = "+0Hz"
+    speed: float = 1.0
+    pitch: int = 0
 
 @app.post("/api/generate")
 async def generate_audio(request: TTSRequest):
@@ -28,12 +28,18 @@ async def generate_audio(request: TTSRequest):
         filename = f"{uuid.uuid4()}.mp3"
         filepath = os.path.join(os.getcwd(), filename)
         
-        # Now passing rate and pitch to the TTS engine
+        # Convert speed (e.g., 1.5) to edge-tts rate format (e.g., "+50%")
+        rate_val = int((request.speed - 1.0) * 100)
+        rate_str = f"{rate_val:+d}%"
+        
+        # Convert pitch (e.g., 5) to edge-tts pitch format (e.g., "+5Hz")
+        pitch_str = f"{request.pitch:+d}Hz"
+        
         communicate = edge_tts.Communicate(
             request.text, 
             request.voice,
-            rate=request.rate,
-            pitch=request.pitch
+            rate=rate_str,
+            pitch=pitch_str
         )
         await communicate.save(filepath)
         
