@@ -49,8 +49,8 @@
         }
         textarea:focus, select:focus, input:focus { outline: none; border-color: #818cf8; }
         textarea { resize: vertical; height: 120px; }
-        optgroup { background-color: #0f172a; color: #38bdf8; }
-        option { background-color: #0f172a; color: #f1f5f9; }
+        optgroup { background-color: #0f172a; color: #38bdf8; font-weight: bold; }
+        option { background-color: #0f172a; color: #f1f5f9; padding: 5px; }
         .range-value { float: right; color: #38bdf8; font-weight: bold; }
         input[type="range"] { accent-color: #ec4899; cursor: pointer; padding: 5px 0; background: transparent; border: none; }
         
@@ -97,20 +97,28 @@
         </div>
 
         <div class="form-group">
-            <label for="voice">Select Voice:</label>
+            <label for="voice">Select Professional Voice:</label>
             <select id="voice">
-                <optgroup label="English Voices">
+                <optgroup label="English Voices (US / UK / AU)">
                     <option value="en-US-AriaNeural">English (US) - Aria (Female)</option>
                     <option value="en-US-GuyNeural">English (US) - Guy (Male)</option>
+                    <option value="en-US-JennyNeural">English (US) - Jenny (Female)</option>
+                    <option value="en-US-SteffanNeural">English (US) - Steffan (Male)</option>
+                    <option value="en-US-AnaNeural">English (US) - Ana (Child Female)</option>
                     <option value="en-GB-SoniaNeural">English (UK) - Sonia (Female)</option>
+                    <option value="en-GB-RyanNeural">English (UK) - Ryan (Male)</option>
+                    <option value="en-GB-LibbyNeural">English (UK) - Libby (Female)</option>
+                    <option value="en-AU-NatashaNeural">English (Australia) - Natasha (Female)</option>
+                    <option value="en-AU-WilliamNeural">English (Australia) - William (Male)</option>
                 </optgroup>
-                <optgroup label="Urdu Voices">
+                <optgroup label="Urdu Voices (Pakistan)">
                     <option value="ur-PK-AsadNeural">Urdu (Pakistan) - Asad (Male)</option>
                     <option value="ur-PK-UzmaNeural">Urdu (Pakistan) - Uzma (Female)</option>
                 </optgroup>
-                <optgroup label="Hindi Voices">
+                <optgroup label="Hindi Voices (India)">
                     <option value="hi-IN-SwaraNeural">Hindi (India) - Swara (Female)</option>
                     <option value="hi-IN-MadhurNeural">Hindi (India) - Madhur (Male)</option>
+                    <option value="hi-IN-AnanyaNeural">Hindi (India) - Ananya (Female)</option>
                 </optgroup>
             </select>
         </div>
