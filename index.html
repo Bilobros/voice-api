@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NexusAI - 3D Voice Studio</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', 'Segoe UI', sans-serif; }
+        body { 
+            background: radial-gradient(circle at 50% 10%, #1e1b4b 0%, #0f172a 60%, #020617 100%); 
+            color: #f8fafc; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            min-height: 100vh; 
+            padding: 20px; 
+        }
+        .container { 
+            background: linear-gradient(145deg, #1e293b, #0f172a);
+            border: 1px solid rgba(255, 255, 255, 0.12); 
+            border-radius: 24px; 
+            padding: 40px; 
+            width: 100%; 
+            max-width: 650px; 
+            box-shadow: 
+                0 25px 50px -12px rgba(0, 0, 0, 0.8),
+                0 0 40px rgba(168, 85, 247, 0.15),
+                inset 0 2px 6px rgba(255, 255, 255, 0.1),
+                inset 0 -5px 15px rgba(0, 0, 0, 0.5);
+            position: relative;
+        }
+        h1 { 
+            text-align: center; 
+            background: linear-gradient(135deg, #38bdf8 0%, #818cf8 50%, #ec4899 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 30px; 
+            font-size: 30px; 
+            font-weight: 900;
+            letter-spacing: -0.5px;
+            text-shadow: 0 10px 20px rgba(0,0,0,0.3);
+        }
+        .form-group { margin-bottom: 24px; }
+        label { display: block; margin-bottom: 8px; font-weight: 700; color: #cbd5e1; font-size: 14px; text-transform: uppercase; letter-spacing: 0.5px; }
+        textarea, select, input[type="range"] { 
+            width: 100%; 
+            padding: 14px 16px; 
+            background-color: #0b0f19; 
+            border: 1px solid #334155; 
+            border-radius: 12px; 
+            color: #f1f5f9; 
+            font-size: 15px; 
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: inset 0 3px 6px rgba(0, 0, 0, 0.6);
+        }
+        textarea:focus, select:focus { 
+            outline: none; 
+            border-color: #818cf8; 
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.8), 0 0 15px rgba(129, 140, 248, 0.4); 
+        }
+        textarea { resize: vertical; height: 130px; }
+        optgroup { background-color: #0f172a; color: #38bdf8; font-weight: bold; }
+        option { background-color: #0f172a; color: #f1f5f9; padding: 8px; }
+        .range-value { float: right; color: #38bdf8; font-weight: bold; }
+        input[type="range"] { accent-color: #ec4899; cursor: pointer; padding: 5px 0; background: transparent; border: none; box-shadow: none; }
+        
+        /* 3D Elevated Button */
+        button { 
+            background: linear-gradient(135deg, #6366f1 0%, #a855f7 50%, #ec4899 100%); 
+            color: white; 
+            border: none; 
+            padding: 16px; 
+            width: 100%; 
+            border-radius: 12px; 
+            font-size: 17px; 
+            font-weight: 800; 
+            cursor: pointer; 
+            transition: all 0.15s ease;
+            box-shadow: 0 6px 0 #4f46e5, 0 12px 25px rgba(168, 85, 247, 0.5);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        button:hover { 
+            transform: translateY(-2px);
+            box-shadow: 0 8px 0 #4f46e5, 0 15px 30px rgba(236, 72, 153, 0.6);
+        }
+        button:active {
+            transform: translateY(4px);
+            box-shadow: 0 2px 0 #4f46e5, 0 5px 10px rgba(168, 85, 247, 0.4);
+        }
+
+        .audio-container { 
+            margin-top: 30px; 
+            text-align: center; 
+            background: #0b0f19; 
+            padding: 18px; 
+            border-radius: 16px; 
+            border: 1px solid #334155;
+            box-shadow: inset 0 2px 5px rgba(0,0,0,0.5);
+        }
+        audio { width: 100%; margin-top: 10px; filter: invert(0.9) hue-rotate(180deg); }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Nexus AI 3D Studio</h1>
+    
+    <div class="form-group">
+        <label for="text">Enter Your Script:</label>
+        <textarea id="text" placeholder="Type or paste your text here..."></textarea>
+    </div>
+
+    <div class="form-group">
+        <label for="voice">Select Professional Voice:</label>
+        <select id="voice">
+            <optgroup label="English Voices (10 Options)">
+                <option value="en-US-AriaNeural">English (US) - Aria (Female - Warm)</option>
+                <option value="en-US-GuyNeural">English (US) - Guy (Male - Professional)</option>
+                <option value="en-US-JennyNeural">English (US) - Jenny (Female - Friendly)</option>
+                <option value="en-US-ChristopherNeural">English (US) - Christopher (Male - Deep)</option>
+                <option value="en-GB-SoniaNeural">English (UK) - Sonia (Female - British Accent)</option>
+                <option value="en-GB-RyanNeural">English (UK) - Ryan (Male - British Accent)</option>
+                <option value="en-AU-NatashaNeural">English (Australia) - Natasha (Female)</option>
+                <option value="en-AU-WilliamNeural">English (Australia) - William (Male)</option>
+                <option value="en-CA-ClaraNeural">English (Canada) - Clara (Female)</option>
+                <option value="en-IN-NeerjaNeural">English (India) - Neerja (Expressive)</option>
+            </optgroup>
+            <optgroup label="Urdu Voices">
+                <option value="ur-PK-AsadNeural">Urdu (Pakistan) - Asad (Male)</option>
+                <option value="ur-PK-UzmaNeural">Urdu (Pakistan) - Uzma (Female)</option>
+                <option value="ur-IN-SalmanNeural">Urdu (India) - Salman (Male)</option>
+                <option value="ur-IN-GulNeural">Urdu (India) - Gul (Female)</option>
+            </optgroup>
+            <optgroup label="Hindi Voices">
+                <option value="hi-IN-SwaraNeural">Hindi (India) - Swara (Female)</option>
+                <option value="hi-IN-MadhurNeural">Hindi (India) - Madhur (Male)</option>
+                <option value="hi-IN-AaravNeural">Hindi (India) - Aarav (Male)</option>
+                <option value="hi-IN-AnanyaNeural">Hindi (India) - Ananya (Female)</option>
+            </optgroup>
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label for="speed">Speed: <span id="speedVal" class="range-value">1.0x</span></label>
+        <input type="range" id="speed" min="0.5" max="2.0" step="0.1" value="1.0" oninput="document.getElementById('speedVal').innerText = this.value + 'x'">
+    </div>
+
+    <div class="form-group">
+        <label for="pitch">Pitch: <span id="pitchVal" class="range-value">0Hz</span></label>
+        <input type="range" id="pitch" min="-20" max="20" step="1" value="0" oninput="document.getElementById('pitchVal').innerText = this.value + 'Hz'">
+    </div>
+
+    <button onclick="generateVoice()">Generate & Download Audio</button>
+
+    <div class="audio-container" id="audioBox" style="display:none;">
+        <label style="color:#38bdf8;">Generated Audio Preview:</label>
+        <audio id="audioPlayer" controls></audio>
+    </div>
+</div>
+
+<script>
+    async function generateVoice() {
+        const text = document.getElementById('text').value;
+        const voice = document.getElementById('voice').value;
+        const speed = document.getElementById('speed').value;
+        const pitch = document.getElementById('pitch').value;
+        
+        if (!text) {
+            alert('Please enter some text first!');
+            return;
+        }
+
+        try {
+            const response = await fetch('YOUR_RENDER_BACKEND_URL/api/generate', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ text, voice, speed: parseFloat(speed), pitch: parseInt(pitch) })
+            });
+
+            if (!response.ok) throw new Error('Failed to generate audio');
+
+            const blob = await response.blob();
+            const audioUrl = URL.createObjectURL(blob);
+            const player = document.getElementById('audioPlayer');
+            player.src = audioUrl;
+            document.getElementById('audioBox').style.display = 'block';
+            player.play();
+        } catch (error) {
+            alert('Error: Make sure your Render backend is active and URL is correct.');
+        }
+    }
+</script>
+
+</body>
+</html>\
