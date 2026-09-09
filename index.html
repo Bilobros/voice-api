@@ -197,7 +197,7 @@
         if (!text) { alert('Please enter text!'); return; }
 
         try {
-            const response =- await fetch(API_URL + '/api/generate', {
+            const response = await fetch(API_URL + '/api/generate', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ text, voice, speed: parseFloat(speed), pitch: parseInt(pitch) })
