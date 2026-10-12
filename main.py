@@ -1,4 +1,4 @@
-from fastapi import FastAPI, HTTPException, Depends
+from fastapi import FastAPI, HTTPException, Depends, BackgroundTasks
 from fastapi.responses import FileResponse
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
@@ -6,6 +6,7 @@ import sqlite3
 import edge_tts
 import uuid
 import os
+import tempfile # Naya module add kiya hai
 
 app = FastAPI()
 
@@ -78,7 +79,6 @@ def login(user: LoginRequest):
     
     return {"message": "Login successful", "status": "active"}
 
-# Simple Admin route to activate users directly from browser/API
 @app.get("/api/admin/activate/{email}")
 def activate_user(email: str):
     conn = sqlite3.connect("users.db")
@@ -88,11 +88,13 @@ def activate_user(email: str):
     conn.close()
     return {"message": f"User {email} activated successfully!"}
 
+# Yahan asali masla tha jo ab theek ho gaya hai!
 @app.post("/api/generate")
-async def generate_audio(request: TTSRequest):
+async def generate_audio(request: TTSRequest, background_tasks: BackgroundTasks):
     try:
+        # Render par temporary folder use karein (permission issue nahi aayega)
         filename = f"{uuid.uuid4()}.mp3"
-        filepath = os.path.join(os.getcwd(), filename)
+        filepath = os.path.join(tempfile.gettempdir(), filename)
         
         rate_val = int((request.speed - 1.0) * 100)
         rate_str = f"{rate_val:+d}%"
@@ -101,6 +103,10 @@ async def generate_audio(request: TTSRequest):
         communicate = edge_tts.Communicate(request.text, request.voice, rate=rate_str, pitch=pitch_str)
         await communicate.save(filepath)
         
+        # Jaise hi user audio download kar le, server se file delete kar do
+        background_tasks.add_task(os.remove, filepath)
+        
         return FileResponse(filepath, media_type="audio/mpeg", filename="audio.mp3")
     except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+        print(f"TTS Error: {str(e)}") # Ab error Render ke logs mein clearly show hoga
+        raise HTTPException(status_code=500, detail=f"Audio Generation Error: {str(e)}")
