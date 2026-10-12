@@ -1,4 +1,2 @@
 fastapi
-uvicorn
-edge-tts @ git+https://github.com/rany2/edge-tts.git
-pydantic
+edge-tts
