@@ -1,4 +1,4 @@
 fastapi
 uvicorn
-edge-tts>=6.1.14
+edge-tts @ git+https://github.com/rany2/edge-tts.git
 pydantic
