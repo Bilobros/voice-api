@@ -1,5 +1,5 @@
 from fastapi import FastAPI, HTTPException, BackgroundTasks
-from fastapi.responses import FileResponse
+from fastapi.responses import FileResponse, HTMLResponse
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 import edge_tts
@@ -9,7 +9,6 @@ import tempfile
 
 app = FastAPI()
 
-# Vercel ko browser se connect karne ke liye CORS
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -24,10 +23,17 @@ class TTSRequest(BaseModel):
     speed: float = 1.0
     pitch: int = 0
 
+# Yeh function aapki index.html file ko direct website par open karega
+@app.get("/")
+def serve_home():
+    if os.path.exists("index.html"):
+        with open("index.html", "r", encoding="utf-8") as f:
+            return HTMLResponse(content=f.read())
+    return HTMLResponse(content="<h1>Error: index.html file nahi mili. Kripya GitHub mein file ka naam check karein.</h1>", status_code=404)
+
 @app.post("/api/generate")
 async def generate_audio(request: TTSRequest, background_tasks: BackgroundTasks):
     try:
-        # Vercel par temporary folder mein file save karna
         filename = f"{uuid.uuid4()}.mp3"
         filepath = os.path.join(tempfile.gettempdir(), filename)
         
@@ -38,13 +44,12 @@ async def generate_audio(request: TTSRequest, background_tasks: BackgroundTasks)
         communicate = edge_tts.Communicate(request.text, request.voice, rate=rate_str, pitch=pitch_str)
         await communicate.save(filepath)
         
-        # Audio send hote hi server se mp3 kachra saaf kar do
         background_tasks.add_task(os.remove, filepath)
         
         return FileResponse(filepath, media_type="audio/mpeg", filename="audio.mp3")
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
-@app.get("/")
-def home():
-    return {"message": "Vercel Backend is Live!"}
+@app.get("/api/test")
+def test_audio():
+    return {"status": "Success", "message": "Vercel Backend is Live!"}
