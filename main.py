@@ -110,3 +110,14 @@ async def generate_audio(request: TTSRequest, background_tasks: BackgroundTasks)
     except Exception as e:
         print(f"TTS Error: {str(e)}") # Ab error Render ke logs mein clearly show hoga
         raise HTTPException(status_code=500, detail=f"Audio Generation Error: {str(e)}")
+@app.get("/api/test")
+async def test_audio():
+    try:
+        import edge_tts, tempfile, os, uuid
+        filepath = os.path.join(tempfile.gettempdir(), f"{uuid.uuid4()}.mp3")
+        communicate = edge_tts.Communicate("Testing audio", "en-US-AriaNeural")
+        await communicate.save(filepath)
+        return {"status": "Success", "message": "Audio bilkul theek generate ho rahi hai!"}
+    except Exception as e:
+        # Yeh line asal error ko browser mein print kar degi!
+        return {"status": "Failed", "error_details": str(e)}
