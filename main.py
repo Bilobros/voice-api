@@ -53,3 +53,13 @@ async def generate_audio(request: TTSRequest, background_tasks: BackgroundTasks)
 @app.get("/api/test")
 def test_audio():
     return {"status": "Success", "message": "Vercel Backend is Live!"}
+
+@app.get("/api/check-error")
+async def check_error():
+    try:
+        test_file = os.path.join(tempfile.gettempdir(), "test.mp3")
+        communicate = edge_tts.Communicate("Testing", "en-US-AriaNeural")
+        await communicate.save(test_file)
+        return {"status": "Success", "message": "Audio generate ho gayi!"}
+    except Exception as e:
+        return {"status": "Failed", "error_type": str(type(e)), "error_details": str(e)}
